@@ -4,7 +4,7 @@ const router = express.Router()
 
 router.get('/products', async(req, res) => {
     try{
-        const products = await ProductDBG.find();
+        const products = await ProductDBG.find().populate('category');
         res.status(200).json(products);
     }
     catch(error){
@@ -15,7 +15,7 @@ router.get('/products', async(req, res) => {
 router.get('/products/:id', async (req , res) => {
     const { id } = req.params;
     try{
-        const product = await ProductDBG.findById(id);
+        const product = await ProductDBG.findById(id).populate('category');
         if(!product){
             return res.status(404).json({ message: "Product not found."})
         }
