@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const UserDBG = require('../models/user.model')
 const protectedRoute = require('../middleware/protectedRoute')
-require('dotenv').config
+require('dotenv').config()
 
 const router = express.Router()
 
