@@ -2,6 +2,7 @@ const express = require('express')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const UserDBG = require('../models/user.model')
+const protectedRoute = require('../middleware/protectedRoute')
 require('dotenv').config
 
 const router = express.Router()
@@ -25,7 +26,7 @@ const generateToken = (userId, role) => {
 router.post("/user/register", async(req, res) =>{
     const { name, email, password } = req.body;
     try{
-        const existingUser = await UserDBG.find({ email })
+        const existingUser = await UserDBG.findOne({ email })
         if(existingUser){
             return res.status(400).json({ message: "email already registered"})
         }
@@ -50,7 +51,7 @@ router.post("/user/register", async(req, res) =>{
 router.post('/user/login', async(req, res) => {
     const { email, password } = req.body;
     try{
-        const user = await UserDBG.find({ email })
+        const user = await UserDBG.findOne({ email })
         if(!user){
             return res.status(401).json({ message: "Invalid credentials"})
         }
@@ -72,6 +73,21 @@ router.post('/user/login', async(req, res) => {
 // Protected route 
 router.get('/user/profile', protectedRoute, (req, res) => {
     res.status(200).json({ message: "user profile data", user: req.user})
+})
+
+// Operations APIs: Need to Add More Security 
+router.get('/users', async(req, res) => {
+    try{
+        const allUsers = await UserDBG.find()
+        if(!allUsers){
+            res.status(404).json({ messgae: "Error fetching all users"})
+        }
+        res.status(200).json(allUsers)
+    }
+    catch(error){
+        console.error(error)
+        res.status(500).json({ message: "Internal server error", error})
+    }
 })
 
 module.exports = router 
