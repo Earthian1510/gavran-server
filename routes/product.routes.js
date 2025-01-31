@@ -1,5 +1,6 @@
 const express = require('express')
 const ProductDBG = require('../models/product.model')
+const CategoryDBG = require('../models/category.model')
 const router = express.Router()
 
 router.get('/products', async(req, res) => {
@@ -23,6 +24,24 @@ router.get('/products/:id', async (req , res) => {
     }
     catch(error){
         res.status(500).json({ message: "Error fetching product", error})
+    }
+})
+
+router.get('/products/category/:category', async (req, res) => {
+    const { category } = req.params;
+    try{
+        const categoryId  = await CategoryDBG.find({ name: new RegExp(`^${category}$`, 'i') })
+        if(!categoryId){
+            return res.status(404).json({ message: "Category not found."})
+        }
+        const products = await ProductDBG.find({ category: categoryId });
+        if(!products){
+            return res.status(404).json({ message: "Product not found."})
+        }
+        res.status(200).json(products)
+    }
+    catch(error){
+        res.status(500).json({ message: "Error fetching category products", error})
     }
 })
 
