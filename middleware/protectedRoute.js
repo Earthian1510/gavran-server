@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 const protectedRoute = (req, res, next) => {
-    const token = req.headers["authentication"]
+    const token = req.headers["authorization"]
     if(!token){
         return res.status(401).json({ message: "No token provided."})
     }
