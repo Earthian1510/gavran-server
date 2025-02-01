@@ -9,6 +9,7 @@ app.use(cors())
 const categoryRoutes = require('./routes/category.routes')
 const productRoutes = require('./routes/product.routes')
 const userRoutes = require('./routes/auth.routes')
+const cartRoutes = require('./routes/cart.routes')
 
 initializeDB()
 
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 app.use('/', categoryRoutes)
 app.use('/', productRoutes)
 app.use('/', userRoutes)
+app.use('/', cartRoutes)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
