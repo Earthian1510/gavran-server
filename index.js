@@ -10,6 +10,7 @@ const categoryRoutes = require('./routes/category.routes')
 const productRoutes = require('./routes/product.routes')
 const userRoutes = require('./routes/auth.routes')
 const cartRoutes = require('./routes/cart.routes')
+const wishlistRoutes = require('./routes/wishlist.routes')
 
 initializeDB()
 
@@ -21,6 +22,7 @@ app.use('/', categoryRoutes)
 app.use('/', productRoutes)
 app.use('/', userRoutes)
 app.use('/', cartRoutes)
+app.use('/', wishlistRoutes)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
