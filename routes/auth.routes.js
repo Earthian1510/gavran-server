@@ -23,12 +23,12 @@ const generateToken = (userId, role) => {
 }
 
 // User signup
-router.post("/user/register", async(req, res) =>{
+router.post("/user/register", async (req, res) => {
     const { name, email, password } = req.body;
-    try{
+    try {
         const existingUser = await UserDBG.findOne({ email })
-        if(existingUser){
-            return res.status(400).json({ message: "email already registered"})
+        if (existingUser) {
+            return res.status(400).json({ message: "email already registered" })
         }
         const hashedPassword = await hashPassword(password);
         const newUser = new UserDBG({
@@ -41,54 +41,54 @@ router.post("/user/register", async(req, res) =>{
         res.status(201).json({ message: "user registration successful.", user: newUser })
 
     }
-    catch(error){
+    catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Internal Server Error", error})
+        res.status(500).json({ message: "Internal Server Error", error })
     }
 })
 
 // User login
-router.post('/user/login', async(req, res) => {
+router.post('/user/login', async (req, res) => {
     const { email, password } = req.body;
-    try{
+    try {
         const user = await UserDBG.findOne({ email })
-        if(!user){
-            return res.status(401).json({ message: "Invalid credentials"})
+        if (!user) {
+            return res.status(401).json({ message: "Invalid credentials" })
         }
-        
+
         const isMatch = await comparePassword(password, user.password)
-        if(!isMatch){
-            return res.status(401).json({ message: "Invalid credentials"})
+        if (!isMatch) {
+            return res.status(401).json({ message: "Invalid credentials" })
         }
 
         const token = generateToken(user._id, user.role);
-
-        res.status(200).json({ message: "Login successful", token })
     
-    } 
-    catch(error){
+        res.status(200).json({ message: "Login successful", token })
+
+    }
+    catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Internal Server Error", error})
+        res.status(500).json({ message: "Internal Server Error", error })
     }
 })
 
 // Protected route 
 router.get('/user/profile', protectedRoute, (req, res) => {
-    res.status(200).json({ message: "user profile data", user: req.user})
+    res.status(200).json({ message: "user profile data", user: req.user })
 })
 
 // Operations APIs: Need to Add More Security 
-router.get('/users', async(req, res) => {
-    try{
+router.get('/users', async (req, res) => {
+    try {
         const allUsers = await UserDBG.find()
-        if(!allUsers){
-            res.status(404).json({ messgae: "Error fetching all users"})
+        if (!allUsers) {
+            res.status(404).json({ messgae: "Error fetching all users" })
         }
         res.status(200).json(allUsers)
     }
-    catch(error){
+    catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Internal server error", error})
+        res.status(500).json({ message: "Internal server error", error })
     }
 })
 

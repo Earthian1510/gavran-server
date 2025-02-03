@@ -1,20 +1,26 @@
-const jwt = require('jsonwebtoken')
-require('dotenv').config()
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 const protectedRoute = (req, res, next) => {
-    const token = req.headers["authorization"]
-    if(!token){
-        return res.status(401).json({ message: "No token provided."})
+    const token = req.headers["authorization"];
+    
+    if (!token) {
+        return res.status(401).json({ message: "No token provided." });
     }
 
-    try{
-        const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = decodedToken;
-        next()
+    const bearerToken = token.split(' ')[1];
+    if (!bearerToken) {
+        return res.status(401).json({ message: "Malformed token." });
     }
-    catch(error){
-        return res.status(402).json({ message: "Invalid Token"})
-    }    
+
+    try {
+        const decodedToken = jwt.verify(bearerToken, process.env.JWT_SECRET);
+        req.user = decodedToken;
+        next();
+    } catch (error) {
+        return res.status(401).json({ message: "Invalid token." });
+    }
 }
 
 module.exports = protectedRoute;
+
