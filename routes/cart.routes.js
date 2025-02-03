@@ -31,7 +31,7 @@ router.post('/cart/:userId/items', async(req, res) => {
                 items: []
             })
         }
-        const existingItem = cart.items.find((item) => item.productId === productId)
+        const existingItem = cart.items.find((item) => item.productId.toString() === productId)
         if(existingItem){
             existingItem.quantity += quantity
         }
