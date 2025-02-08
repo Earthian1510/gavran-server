@@ -9,7 +9,7 @@ router.use(protectedRoute)
 router.get('/user/:userId', async (req, res) => {
     const { userId } = req.params;
     try {
-        const user = await UserDBG.findOne({ userId }).populate('')
+        const user = await UserDBG.findOne({ userId }).populate('userId')
         if (!user) {
             return res.status(404).json({ message: 'User not found' })
         }
