@@ -27,7 +27,28 @@ router.get('/users', async (req, res) => {
     }
     catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Internal server error", error });
+        res.status(500).json({ message: "Error fetching users" });
+    }
+})
+
+router.put('/user/:userId', async (req, res) => {
+    const { userId } = req.params;
+    const userData = req.body;
+    try{
+        const user = await UserDBG.findOneAndUpdate(
+            { _id: userId },  
+            userData,        
+            { new: true }     
+        );
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+    }
+    catch(error){
+        console.error(error)
+        res.status(500).json({ message: "Error updating user data" });
     }
 })
 

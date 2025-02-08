@@ -34,7 +34,8 @@ router.post("/user/register", async (req, res) => {
         const newUser = new UserDBG({
             name,
             email,
-            password: hashedPassword
+            password: hashedPassword,
+            userImage
         })
 
         await newUser.save()

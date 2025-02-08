@@ -19,6 +19,10 @@ const userSchema = new mongoose.Schema({
         enum: ["user", "admin"],
         default: 'user',
     },
+    userImage: {
+        type: String,
+        default: "http://www.listercarterhomes.com/wp-content/uploads/2013/11/dummy-image-square.jpg",
+    }
     // Address 
 
 }, 
