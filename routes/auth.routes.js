@@ -72,24 +72,4 @@ router.post('/user/login', async (req, res) => {
     }
 })
 
-// Protected route 
-router.get('/user/profile', protectedRoute, (req, res) => {
-    res.status(200).json({ message: "user profile data", user: req.user })
-})
-
-// Operations APIs: Need to Add More Security 
-router.get('/users', async (req, res) => {
-    try {
-        const allUsers = await UserDBG.find()
-        if (!allUsers) {
-            res.status(404).json({ messgae: "Error fetching all users" })
-        }
-        res.status(200).json(allUsers)
-    }
-    catch (error) {
-        console.error(error)
-        res.status(500).json({ message: "Internal server error", error })
-    }
-})
-
 module.exports = router 
