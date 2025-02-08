@@ -82,7 +82,7 @@ router.patch('/cart/:userId/items/:productId/decrease', async (req, res) => {
 
         const item = cart.items.find((item) => item.productId.toString() === productId)
         if(!item){
-            return res.status(404).json({ message: "Item not found in cart"})
+            return res.status(404).json({ message: "Item not found in cart", productId})
         }
 
         item.quantity -= 1;
