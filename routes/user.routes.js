@@ -5,11 +5,10 @@ const router = express.Router()
 
 router.use(protectedRoute)
 
-
 router.get('/user/:userId', async (req, res) => {
     const { userId } = req.params;
     try {
-        const user = await UserDBG.findOne({ userId }).populate('userId')
+        const user = await UserDBG.findOne({ _id: userId }) 
         if (!user) {
             return res.status(404).json({ message: 'User not found' })
         }
@@ -23,15 +22,12 @@ router.get('/user/:userId', async (req, res) => {
 
 router.get('/users', async (req, res) => {
     try {
-        const allUsers = await UserDBG.find()
-        if (!allUsers) {
-            res.status(404).json({ messgae: "Error fetching all users" })
-        }
-        res.status(200).json(allUsers)
+        const allUsers = await UserDBG.find();
+        res.status(200).json(allUsers);
     }
     catch (error) {
         console.error(error)
-        res.status(500).json({ message: "Internal server error", error })
+        res.status(500).json({ message: "Internal server error", error });
     }
 })
 
