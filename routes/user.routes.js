@@ -35,8 +35,8 @@ router.put('/user/:userId', async (req, res) => {
     const { userId } = req.params;
     const userData = req.body;
     try{
-        const user = await UserDBG.findOneAndUpdate(
-            { _id: userId },  
+        const user = await UserDBG.findByIdAndUpdate(
+            userId,  
             userData,        
             { new: true }     
         );
