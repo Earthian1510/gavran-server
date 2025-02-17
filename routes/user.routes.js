@@ -3,44 +3,42 @@ const UserDBG = require('../models/user.model')
 const protectedRoute = require('../middleware/protectedRoute')
 const router = express.Router()
 const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
+const { v2: cloudinary } = require('cloudinary')
+const { CloudinaryStorage} = require('multer-storage-cloudinary')
+require('dotenv').config();
 
-router.use(protectedRoute)
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+})
 
-const uploadDirectory = path.join(__dirname, '../uploads');
-if(!fs.existsSync(uploadDirectory)){
-    fs.mkdirSync(uploadDirectory, { recursive: true })
-}
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, uploadDirectory);
-    },
-    filename: (req, file, cb) => {
-        const fileName = Date.now() + '-' + Math.round(Math.random() * 1e9);
-        cb(null, fileName + path.extname(file.originalname))
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: 'user-images',
+        format: async (req, file) => 'png',
+        public_id: (req, file) => Date.now() + '-' + Math.round(Math.random() * 1e9)
     }
 })
 
 const upload = multer({ storage })
 
-router.post('/user/upload-image', protectedRoute, upload.single('image'), async(req, res) => {
+router.use(protectedRoute)
+
+router.post('/user/upload-image', upload.single('image'), async(req, res) => {
     try{
         if(!req.file){
             return res.status(400).json({ message: "No file uploaded."})
         }
 
-        const imageUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
-        res.status(200).json({ imageUrl });
+        res.status(200).json({ imageUrl: req.file.path });
     }
     catch(error){
         console.error(error)
         res.status(500).json({ message: 'Error uploading image.'})
     }
 })
-
-router.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
 router.get('/user/:userId', async (req, res) => {
     const { userId } = req.params;
