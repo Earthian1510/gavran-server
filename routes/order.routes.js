@@ -49,9 +49,9 @@ router.get('/orders/:userId/:orderId', async (req, res) => {
 router.post('/orders/:userId', async(req,res) => {
     try{
         const { userId } = req.params;
-        const { orderInfo, shippingorder } = req.body;
+        const { orderInfo, shippingAddress } = req.body;
         
-        const newOrder = new OrderDBG({ userId, orderInfo, shippingorder })
+        const newOrder = new OrderDBG({ userId, orderInfo, shippingAddress })
 
         await newOrder.save()
         res.status(201).json(newOrder)
