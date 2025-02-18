@@ -43,7 +43,7 @@ router.post('/user/upload-image', upload.single('image'), async(req, res) => {
 router.get('/user/:userId', async (req, res) => {
     const { userId } = req.params;
     try {
-        const user = await UserDBG.findOne(userId)
+        const user = await UserDBG.findOne({ _id: userId })
         if (!user) {
             return res.status(404).json({ message: 'User not found' })
         }
