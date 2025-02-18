@@ -18,7 +18,8 @@ router.get('/orders', async(req, res) => {
 router.get('/orders/:userId', async(req, res) => {
     const { userId } = req.params;
     try{
-        const orders = await OrderDBG.find({ userId })
+        const orders = await OrderDBG.find({ userId }).populate('shippingAddress').populate('orderInfo.productId', 'name price_per_kg imageUrl');
+
         if(!orders){
             res.status(404).json({message: "orders not found!"} )
         }
@@ -33,7 +34,8 @@ router.get('/orders/:userId', async(req, res) => {
 router.get('/orders/:userId/:orderId', async (req, res) => {
     const { userId, orderId } = req.params;
     try{
-        const order = await OrderDBG.findOne({ userId, _id: orderId });
+        const order = await OrderDBG.findOne({ userId, _id: orderId }).populate('shippingAddress').populate('orderInfo.productId', 'name price_per_kg imageUrl');
+
         if(!order){
             return res.status(404).json({ message: "order not found!"})
         }
