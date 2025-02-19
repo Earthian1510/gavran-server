@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const orderSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'UserDB',
+        ref: 'UserDBG',
         required: true,
     },
     orderInfo: [
@@ -22,7 +22,7 @@ const orderSchema = new mongoose.Schema({
     ],
     shippingAddress: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'AddressDB',
+        ref: 'AddressDBG',
         required: true
     },
 })
