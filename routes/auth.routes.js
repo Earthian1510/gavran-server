@@ -35,7 +35,7 @@ router.post("/user/register", async (req, res) => {
             name,
             email,
             password: hashedPassword,
-            userImage
+            userImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhAq96S4rzot47qiaT2Q65A3Jc3vLAUaKWKA&s'
         })
 
         await newUser.save()
@@ -54,12 +54,12 @@ router.post('/user/login', async (req, res) => {
     try {
         const user = await UserDBG.findOne({ email })
         if (!user) {
-            return res.status(401).json({ message: "Invalid credentials" })
+            return res.status(401).json({ message: "Invalid credentials - Email doesnt exist" })
         }
 
         const isMatch = await comparePassword(password, user.password)
         if (!isMatch) {
-            return res.status(401).json({ message: "Invalid credentials" })
+            return res.status(401).json({ message: "Invalid credentials - Password dont Match" })
         }
 
         const token = generateToken(user._id, user.role);
